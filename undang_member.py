@@ -1,0 +1,242 @@
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, Bot
+from telegram.ext import Application, ApplicationBuilder, CommandHandler, CallbackQueryHandler, ContextTypes
+from datetime import datetime
+import threading
+import asyncio
+import logging
+import pytz
+import os
+
+
+auto_task = None
+
+VIDEO_FILE_ID = "BAACAgUAAxkBAAIB2mhsD3ZVutH2tvrQssv6OmR08cfUAAIeFwACZ8VgV8aQehQGveLrNgQ"
+
+# ID grup dan channel
+API_TOKEN = os.environ["API_TOKEN"]
+GRUP_INFO_FREEBET_ID = -1002658447462
+GRUP_LINK_GACOR_ID = -1002255700000
+CHANNEL_KOLONI4D_ID = -1002585588580
+TARGET_CHAT_IDS = [GRUP_INFO_FREEBET_ID, GRUP_LINK_GACOR_ID]
+
+# Daftar foto hot (URL gambar langsung)
+FOTO_HOT_LIST = [
+    "https://i.postimg.cc/CzfXRxr3/15.jpg",
+    "https://i.postimg.cc/BtzRZKp5/16.jpg",
+    "https://i.postimg.cc/VSzVZBsw/17.jpg",
+    "https://i.postimg.cc/Yv6PxyH8/18.jpg",
+    "https://i.postimg.cc/8Fwn2Js6/19.jpg",
+    "https://i.postimg.cc/r0PZpB1y/20.jpg",
+    "https://i.postimg.cc/9wDStmmq/3.jpg",
+    "https://i.postimg.cc/87Q3Mgqj/6.jpg",
+    "https://i.postimg.cc/c6CVNmR4/7.jpg",
+    "https://i.postimg.cc/qhRZ4JCZ/A1.jpg"
+]
+
+FOTO_HOT_LIST2 = [
+    "https://i.postimg.cc/rshD8ww2/5955226285280180500.jpg",
+]
+
+messages = (
+    "🔥<b>GRUP HIBURAN DEWASA  +  SLOT GACOR 2025!</b>🔥\n"
+    "———————————————\n"
+    "🌟 <b>Satu tempat, dua kenikmatan</b>  —  hiburan + cuan!\n\n"
+
+    "📂 <b>FULL LINK BOKEP UPDATE HARIAN</b>\n"
+    "  • Lokal & internasional, kualitas HD\n"
+    "  • Koleksi di‑update nonstop 🔄\n\n"
+
+    "🎰 <b>SLOT GACOR + RTP REAL‑TIME</b>\n"
+    "  • Info bocoran pola JP tiap hari 💥\n"
+    "  • Bukti WD asli member ✅\n\n"
+
+    "👥 Grup ramai • Member aktif • Tanpa hoax\n"
+    "🕵️‍♂️ Admin responsif 24 jam\n\n"
+
+    "🚨 <u>BURUAN JOIN SEBELUM DILIMIT!</u> 🚨\n"
+    "📥 BOT Utama: <a href=\"https://t.me/Idaman_warga62_bot\">@Idaman_warga62_bot</a>\n"
+    "🔗 Link Alternatif: <a href=\"https://mez.ink/koloni4d\">KOLONI4D AKUN VIP 1 </a>\n"
+    "🔗 Link Alternatif: <a href=\"https://heylink.me/LinkAlternatifKoloni4D\">KOLONI4D AKUN VIP 2</a>\n\n"
+
+    "😈 <b>Gabung sekarang, rasakan sendiri bedanya!</b>"
+)
+
+
+PROMO_KEYBOARD = InlineKeyboardMarkup([
+    [
+        InlineKeyboardButton("📥 BOT UTAMA", url="https://t.me/Idaman_warga62_bot"),
+        InlineKeyboardButton("🔗 LINK ALTERNATIF", url="https://mez.ink/koloni4d"),
+        InlineKeyboardButton("🔗 LINK ALTERNATIF", url="https://heylink.me/LinkAlternatifKoloni4D")
+    ]
+])
+
+logging.basicConfig(level=logging.INFO)
+
+async def is_member(bot: Bot, user_id: int, chat_id: int) -> bool:
+    try:
+        member = await bot.get_chat_member(chat_id, user_id)
+        return member.status in ["member", "administrator", "creator"]
+    except Exception as e:
+        print(f"[is_member] Error cek keanggotaan chat_id {chat_id}: {e}")
+        return False
+
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    keyboard = [
+        [
+            InlineKeyboardButton("📸 Foto Hot 🔥", callback_data="foto_hot"),
+            InlineKeyboardButton("🎞️ Video Hot 🎬", callback_data="video_hot")
+        ],
+        [
+            InlineKeyboardButton("🔗 Situs Link Gacor 1 🚀", url="https://mez.ink/koloni4d/"),
+            InlineKeyboardButton("🔗 Situs Link Gacor 2 🚀", url="https://heylink.me/LinkAlternatifKoloni4D/")
+        ]
+        
+    ]
+
+    welcome_text = (
+        "🎉 *Selamat Datang di Dunia Eksklusif Koloni4D!* 🎉\n\n"
+        "Nikmati berbagai konten spesial hanya untuk kamu yang terpilih!\n"
+        "Pilih menu di bawah dan mulai jelajahi keseruan tanpa batas:\n\n"
+        "🔥 *Foto Hot* — Galeri pilihan terbaru yang bikin deg-degan.\n"
+        "🎬 *Video Hot* — Tayangan eksklusif penuh sensasi.\n"
+        "🎯 *Situs Link Gacor* — Akses langsung ke link terpercaya & anti-blokir.\n\n"
+        "📢 _Jangan lupa! Bergabung di grup & channel resmi agar tidak ketinggalan konten dan bonus menarik setiap hari._"
+    )
+
+    if update.message:
+        await update.message.reply_text(
+            welcome_text,
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode="HTML"
+        )
+    elif update.callback_query:
+        await update.callback_query.edit_message_text(
+            welcome_text,
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode="HTML"
+        )
+
+
+async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query
+    user_id = query.from_user.id
+    await query.answer()
+
+    if query.data in ["foto_hot", "video_hot"]:
+        verify_callback = "verify_foto_hot" if query.data == "foto_hot" else "verify_video_hot"
+        keyboard = [
+            [
+                InlineKeyboardButton("📣 Join Grup Info Freebet4D", url="https://t.me/InfoFreebet4D"),
+                InlineKeyboardButton("🧲 Join Grup Situs Link Gacor", url="https://t.me/SITUSLINKGACOR4D")
+            ],
+            [
+                InlineKeyboardButton("📺 Join Channel Koloni4D", url="https://t.me/koloni4d_official1"),
+                InlineKeyboardButton("✅ Saya Sudah Join, Verifikasi Sekarang", callback_data=verify_callback)
+            ],
+            [
+                InlineKeyboardButton("🔙 Kembali", callback_data="back_to_start")
+            ]
+        ]
+        await query.edit_message_text(
+            """🚨 <b>Verifikasi Keanggotaan Dulu!</b>
+
+⚠️ Untuk akses konten eksklusif, kamu wajib gabung di:
+• 2 Grup VIP Telegram
+• 1 Channel Resmi Koloni4D
+
+➡️ Setelah bergabung, klik tombol 
+✅ Saya Sudah Join untuk verifikasi keanggotaan kamu.
+Terima kasih sudah bergabung dan selamat menikmati konten!""",
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode="HTML"
+        )
+
+    elif query.data == "verify_foto_hot":
+        is_in_grup1 = await is_member(context.bot, user_id, GRUP_INFO_FREEBET_ID)
+        is_in_grup2 = await is_member(context.bot, user_id, GRUP_LINK_GACOR_ID)
+        is_in_channel = await is_member(context.bot, user_id, CHANNEL_KOLONI4D_ID)
+        if is_in_grup1 and is_in_grup2 and is_in_channel:
+            await query.edit_message_text("✅ Kamu sudah gabung di semua grup & channel VIP!\nBerikut koleksi foto hot:")
+            for url in FOTO_HOT_LIST:
+                try:
+                    await query.message.reply_photo(photo=url)
+                except Exception as e:
+                    print(f"Gagal kirim foto {url}: {e}")
+            keyboard = [[InlineKeyboardButton("🔙 Kembali ke Menu Utama", callback_data="back_to_start")]]
+            await query.message.reply_text("Pilih menu selanjutnya:", reply_markup=InlineKeyboardMarkup(keyboard))
+        else:
+            keyboard = [
+                [InlineKeyboardButton("📣 Join Grup Info Freebet4D", url="https://t.me/InfoFreebet4D")],
+                [InlineKeyboardButton("🧲 Join Grup Situs Link Gacor", url="https://t.me/SITUSLINKGACOR4D")],
+                [InlineKeyboardButton("📺 Join Channel Koloni4D", url="https://t.me/koloni4d_official1")],
+                [InlineKeyboardButton("🔙 Kembali", callback_data="back_to_start")]
+            ]
+            await query.edit_message_text(
+                "❌ Kamu belum gabung di semua grup & channel VIP.\n"
+                "Silakan join dulu, lalu verifikasi ulang.",
+                reply_markup=InlineKeyboardMarkup(keyboard)
+            )
+
+    elif query.data == "verify_video_hot":
+        is_in_grup1 = await is_member(context.bot, user_id, GRUP_INFO_FREEBET_ID)
+        is_in_grup2 = await is_member(context.bot, user_id, GRUP_LINK_GACOR_ID)
+        is_in_channel = await is_member(context.bot, user_id, CHANNEL_KOLONI4D_ID)
+        if is_in_grup1 and is_in_grup2 and is_in_channel:
+            await query.edit_message_text("✅ Kamu sudah gabung di semua grup & channel VIP!\nBerikut koleksi video hot:")
+            for url in FOTO_HOT_LIST2:
+                try:
+                    await query.message.reply_photo(photo=url)
+                except Exception as e:
+                    print(f"Gagal kirim video {url}: {e}")
+            tombol_link = [
+                [InlineKeyboardButton("🎥 Link Video Lengkap", url="https://dm.fandome.co/feed?wid=88ESU7NX")],
+                [InlineKeyboardButton("🔙 Kembali ke Menu Utama", callback_data="back_to_start")]
+            ]
+            await query.message.reply_text(
+                "🎬 Klik tombol di bawah untuk akses video lengkap dan konten menarik lainnya!",
+                reply_markup=InlineKeyboardMarkup(tombol_link))
+        else:
+            keyboard = [
+                [InlineKeyboardButton("📣 Join Grup Info Freebet4D", url="https://t.me/InfoFreebet4D")],
+                [InlineKeyboardButton("🧲 Join Grup Situs Link Gacor", url="https://t.me/SITUSLINKGACOR4D")],
+                [InlineKeyboardButton("📺 Join Channel Koloni4D", url="https://t.me/koloni4d_official1")],
+                [InlineKeyboardButton("🔙 Kembali", callback_data="back_to_start")]
+            ]
+            await query.edit_message_text(
+                "❌ Kamu belum gabung di semua grup & channel VIP.\n"
+                "Silakan join dulu, lalu verifikasi ulang.",
+                reply_markup=InlineKeyboardMarkup(keyboard)
+            )
+
+    elif query.data == "back_to_start":
+        await start(update, context)
+
+async def auto_send_messages(app: Application):
+    while True:
+        for chat_id in [GRUP_INFO_FREEBET_ID, GRUP_LINK_GACOR_ID]:
+            try:
+                await app.bot.send_video(chat_id=chat_id, video=VIDEO_FILE_ID)
+                await app.bot.send_message(chat_id=chat_id, text=messages, parse_mode="HTML")
+                logging.info(f"✅ Kirim video & teks ke {chat_id} berhasil.")
+            except Exception as e:
+                logging.error(f"❌ Gagal kirim video & teks ke {chat_id}: {e}")
+        logging.info("⌛ Menunggu 2 jam sebelum pengiriman berikutnya...")
+        await asyncio.sleep(3600)
+
+async def on_startup(app: Application):
+    global auto_task
+    if auto_task is None:
+        auto_task = asyncio.create_task(auto_send_messages(app))
+        print("🚀 Auto-send promo dimulai...")
+
+def main():
+    application = Application.builder().token(API_TOKEN).post_init(on_startup).build()
+
+    application.add_handler(CommandHandler("start", start))
+    application.add_handler(CallbackQueryHandler(button_handler))
+
+    print("🤖 Bot is running...")
+    application.run_polling()
+
+if __name__ == "__main__":
+    main()
