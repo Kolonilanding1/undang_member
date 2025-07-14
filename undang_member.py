@@ -228,6 +228,37 @@ async def on_startup(app: Application):
     if auto_task is None:
         auto_task = asyncio.create_task(auto_send_messages(app))
         print("🚀 Auto-send promo dimulai...")
+class SimpleHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        if self.path == '/health':
+            self.send_response(200)
+            self.send_header('Content-type', 'text/plain')
+            self.end_headers()
+            self.wfile.write(b"OK")
+        else:
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(b"Bot is alive!")
+
+    def do_HEAD(self):
+        # Kirim response header yang sama seperti do_GET, tanpa body
+        if self.path == '/health':
+            self.send_response(200)
+            self.send_header('Content-type', 'text/plain')
+            self.end_headers()
+        else:
+            self.send_response(200)
+            self.end_headers()
+
+
+def start_ping_server():
+    import os
+    port = int(os.environ.get('PORT', 8080))
+    server = HTTPServer(('0.0.0.0', port), SimpleHandler)
+    server.serve_forever()
+
+# Jalankan server HTTP di thread terpisah
+threading.Thread(target=start_ping_server, daemon=True).start()
 
 def main():
     application = Application.builder().token(API_TOKEN).post_init(on_startup).build()
