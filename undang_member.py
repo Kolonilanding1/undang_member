@@ -1,5 +1,6 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, Bot
 from telegram.ext import Application, ApplicationBuilder, CommandHandler, CallbackQueryHandler, ContextTypes
+from http.server import HTTPServer, BaseHTTPRequestHandler
 from datetime import datetime
 import threading
 import asyncio
@@ -228,6 +229,7 @@ async def on_startup(app: Application):
     if auto_task is None:
         auto_task = asyncio.create_task(auto_send_messages(app))
         print("🚀 Auto-send promo dimulai...")
+        
 class SimpleHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path == '/health':
