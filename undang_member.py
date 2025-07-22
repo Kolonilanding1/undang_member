@@ -8,7 +8,6 @@ import logging
 import pytz
 import os
 
-
 auto_task = None
 
 VIDEO_FILE_ID = "BAACAgUAAxkBAAIB2mhsD3ZVutH2tvrQssv6OmR08cfUAAIeFwACZ8VgV8aQehQGveLrNgQ"
@@ -55,10 +54,6 @@ messages = (
     "🕵️‍♂️ Admin responsif 24 jam\n\n"
 
     "🚨 <u>BURUAN JOIN SEBELUM DILIMIT!</u> 🚨\n"
-    "📥 BOT Utama: <a href=\"https://t.me/Idaman_warga62_bot\">@Idaman_warga62_bot</a>\n"
-    "🔗 Link Alternatif: <a href=\"https://mez.ink/koloni4d\">KOLONI4D AKUN VIP 1 </a>\n"
-    "🔗 Link Alternatif: <a href=\"https://heylink.me/LinkAlternatifKoloni4D\">KOLONI4D AKUN VIP 2</a>\n\n"
-
     "😈 <b>Gabung sekarang, rasakan sendiri bedanya!</b>"
 )
 
@@ -217,12 +212,22 @@ async def auto_send_messages(app: Application):
         for chat_id in [GRUP_INFO_FREEBET_ID, GRUP_LINK_GACOR_ID]:
             try:
                 await app.bot.send_video(chat_id=chat_id, video=VIDEO_FILE_ID)
-                await app.bot.send_message(chat_id=chat_id, text=messages, parse_mode="HTML")
+                keyboard = InlineKeyboardMarkup([
+                        [InlineKeyboardButton("📥 BOT UTAMA", url="https://t.me/Idaman_warga62_bot")],
+                        [InlineKeyboardButton("🔗 LINK ALTERNATIF", url="https://mez.ink/koloni4d")],
+                        [InlineKeyboardButton("🔗 TERBARU LIVE 0M3K", url="https://t.me/Livevideohot_Bot")]
+                    ])
+                await app.bot.send_message(
+                    chat_id=chat_id,
+                    text=messages,
+                    parse_mode="HTML",
+                    reply_markup=keyboard
+                )
                 logging.info(f"✅ Kirim video & teks ke {chat_id} berhasil.")
             except Exception as e:
                 logging.error(f"❌ Gagal kirim video & teks ke {chat_id}: {e}")
         logging.info("⌛ Menunggu 2 jam sebelum pengiriman berikutnya...")
-        await asyncio.sleep(3600)
+        await asyncio.sleep(7200)  # 2 jam = 7200 detik
 
 async def on_startup(app: Application):
     global auto_task
