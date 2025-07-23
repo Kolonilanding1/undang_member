@@ -45,6 +45,8 @@ messages = (
     "📂 <b>FULL LINK BOKEP UPDATE HARIAN</b>\n"
     "  • Lokal & internasional, kualitas HD\n"
     "  • Koleksi di‑update nonstop 🔄\n\n"
+    "  • Live Vidio Hot 🔥\n\n"
+
 
     "🎰 <b>SLOT GACOR + RTP REAL‑TIME</b>\n"
     "  • Info bocoran pola JP tiap hari 💥\n"
@@ -90,13 +92,14 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     ]
 
     welcome_text = (
-        "🎉 *Selamat Datang di Dunia Eksklusif Koloni4D!* 🎉\n\n"
-        "Nikmati berbagai konten spesial hanya untuk kamu yang terpilih!\n"
-        "Pilih menu di bawah dan mulai jelajahi keseruan tanpa batas:\n\n"
-        "🔥 *Foto Hot* — Galeri pilihan terbaru yang bikin deg-degan.\n"
-        "🎬 *Video Hot* — Tayangan eksklusif penuh sensasi.\n"
-        "🎯 *Situs Link Gacor* — Akses langsung ke link terpercaya & anti-blokir.\n\n"
-        "📢 _Jangan lupa! Bergabung di grup & channel resmi agar tidak ketinggalan konten dan bonus menarik setiap hari._"
+        "💋 *Selamat Datang di Dunia Nakal Koloni4D!* 💋\n\n"
+        "Siapkan jantungmu... karena di sini bukan tempat biasa.\n"
+        "Konten panas, live menggoda, dan link-link rahasia — semuanya cuma buat kamu yang berani!\n\n"
+        "📸 *FOTO HOT GILA!* — Cewek-cewek montok, pose gak pake malu-malu 😏\n"
+        "🎥 *VIDEO HOT FULL AXXX!* — Aksi liar, tatapan nakal, suara desahan jelas!\n"
+        "🔴 *LIVE OMEK NAKAL!* — Cewek real, live langsung, siap ajak kamu basah-basahan 🥵\n"
+        "🔗 *LINK GACOR TEMBUS SORGA!* — Akses kilat ke tempat paling panas, anti sensor!\n\n"
+        "🚨 _Wajib join grup & channel sebelum menikmati semua ini. Koloni4D gak main-main, bro!_"
     )
 
     if update.message:
