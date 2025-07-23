@@ -84,7 +84,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         ],
         [
             InlineKeyboardButton("🔗 Situs Link Gacor 1 🚀", url="https://mez.ink/koloni4d/"),
-            InlineKeyboardButton("🔗 Situs Link Gacor 2 🚀", url="https://heylink.me/LinkAlternatifKoloni4D/")
+            InlineKeyboardButton("🔗 Situs Link Gacor 2 🚀", url="https://t.me/Livevideohot_Bot")
         ]
         
     ]
