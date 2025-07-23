@@ -84,7 +84,10 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
             InlineKeyboardButton("📸 Foto Hot 🔥", callback_data="foto_hot"),
             InlineKeyboardButton("🎞️ Video Hot 🎬", callback_data="video_hot")
         ],
-        [InlineKeyboardButton("🔥 Grup LiVe Omek", url="https://t.me/Livevideohot_Bot")]]
+        [
+            InlineKeyboardButton("🔥 Grup LiVe Omek", url="https://t.me/Livevideohot_Bot")
+        ]
+    ]
 
     welcome_text = (
         "🔥 *Welcome ke Zona Nakal Koloni4D!* 🔥\n\n"
