@@ -92,14 +92,12 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     ]
 
     welcome_text = (
-        "💋 *Selamat Datang di Dunia Nakal Koloni4D!* 💋\n\n"
-        "Siapkan jantungmu... karena di sini bukan tempat biasa.\n"
-        "Konten panas, live menggoda, dan link-link rahasia — semuanya cuma buat kamu yang berani!\n\n"
-        "📸 *FOTO HOT GILA!* — Cewek-cewek montok, pose gak pake malu-malu 😏\n"
-        "🎥 *VIDEO HOT FULL AXXX!* — Aksi liar, tatapan nakal, suara desahan jelas!\n"
-        "🔴 *LIVE OMEK NAKAL!* — Cewek real, live langsung, siap ajak kamu basah-basahan 🥵\n"
-        "🔗 *LINK GACOR TEMBUS SORGA!* — Akses kilat ke tempat paling panas, anti sensor!\n\n"
-        "🚨 _Wajib join grup & channel sebelum menikmati semua ini. Koloni4D gak main-main, bro!_"
+        "🔥 *Welcome ke Zona Nakal Koloni4D!* 🔥\n\n"
+        "Pilih menu panas di bawah:\n"
+        "📸 *Foto Hot* — Montok, tanpa sensor!\n"
+        "🎥 *Video Hot* — Full aksi, full desah!\n"
+        "🔴 *Live Omek* — Cewek real, siap basah-basahan!\n"
+        "🚨 _Join grup & channel dulu biar gak ketinggalan yang liar-liar!_"
     )
 
     if update.message:
